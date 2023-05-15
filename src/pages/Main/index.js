@@ -1,45 +1,73 @@
-import React, { useState } from 'react';
-import { FaGithub, FaPlus } from 'react-icons/fa'
-import {Container, Form, SubmitButton}  from './styles'
+import React, { useState, useCallback } from "react";
+import { FaGithub, FaPlus, FaSpinner } from "react-icons/fa";
+import { Container, Form, SubmitButton } from "./styles";
 
-import api from '../../services/api';
+import api from "../../services/api";
 
-export default function Main(){
+export default function Main() {
+  const [newRepo, setNewRepo] = useState("");
+  const [repositorios, setRepositorios] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-    const [newRepo, setNewRepo] = useState('');
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
 
-    function handleSubmit(e){
-        e.preventDefault();//para não dar refresh na pag
+      async function submit() {
+        setLoading(true);
+        try {
+          const response = await api.get(`repos/${newRepo}`);
 
-        //Puxando os repositorios
-        const response = api.get(`repos/${newRepo}`)
-    }
-    
-    
-    function handleInputChange(e){
-        setNewRepo(e.target.value);
-    }
+          const data = {
+            name: response.data.full_name,
+          };
 
-    return(
-        <Container>
-            <h1>
-                <FaGithub size={25}/>
-                Meus Repositorios
-            </h1>
+          console.log(data);
 
-        <Form onSubmit={handleSubmit}>
-            <input type='text' 
-            placeholder='Adicionar Repositorios'
-            value={newRepo}
-            onChange={handleInputChange}
-            />
+          setRepositorios([...repositorios, data]);
+          setNewRepo("");
+        } catch (error) {
 
-            <SubmitButton>
-                <FaPlus color="#FFF" size={14}/>
-            </SubmitButton>
+            console.log(error);
 
-        </Form>   
+        }finally {
+            setLoading(false)
+        }
+      }
 
-        </Container>
-    )
+      submit();
+    },
+    [newRepo, repositorios]
+  );
+
+  function handleinputChange(e) {
+    setNewRepo(e.target.value);
+  }
+
+  return (
+    <Container>
+      <h1>
+        <FaGithub size={25} />
+        Meus Repositorios
+      </h1>
+
+      <Form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Adicionar Repositorios"
+          value={newRepo}
+          onChange={handleinputChange}
+        />
+
+        <SubmitButton loading={loading ? 1 : 0}>
+            {loading ? (
+                <FaSpinner color= '#FFF' size={14}/>
+            ) : (
+                <FaPlus color= '#FFF' size={14}/>
+            )}
+        
+        </SubmitButton>
+      </Form>
+    </Container>
+  );
 }
