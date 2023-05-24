@@ -1,12 +1,7 @@
-<<<<<<< HEAD
-import React, {useState, useCallback} from 'react';
-import { FaGithub, FaPlus } from 'react-icons/fa';
-import {Container, Form, SubmitButton} from './styles';
-=======
 import React, { useState, useCallback } from "react";
-import { FaGithub, FaPlus, FaSpinner } from "react-icons/fa";
-import { Container, Form, SubmitButton } from "./styles";
->>>>>>> fd2ba249fb1b71ba03025446de02683836107fec
+import { FaGithub, FaPlus, FaSpinner, FaBars } from "react-icons/fa";
+import { Container, Form, SubmitButton, List } from "./styles";
+
 
 import api from "../../services/api";
 
@@ -15,63 +10,8 @@ export default function Main() {
   const [repositorios, setRepositorios] = useState([]);
   const [loading, setLoading] = useState(false);
 
-<<<<<<< HEAD
-  const [newRepo, setNewRepo] = useState('');
-  const [repositorios, setRepositorios] = useState([]);
+  const handleSubmit = useCallback((e) => {
 
-
-  const handleSubmit = useCallback((e)=>{
-    e.preventDefault();
-
-    async function submit(){ 
-      const response = await api.get(`repos/${newRepo}`);
-  
-
-      const data = {
-        name: response.data.full_name,
-      }
-
-      
-      setRepositorios([...repositorios, data]);
-      setNewRepo('');
-    }
-
-    submit();
-
-  }, [newRepo, repositorios]);
-
-  function handleinputChange(e){
-    setNewRepo(e.target.value);
-  }
-
-  return(
-    <Container>
-      
-      <h1>
-        <FaGithub size={25}/>
-        Meus Repositorios
-      </h1>
-
-      <Form onSubmit={handleSubmit}>
-        <input 
-        type="text" 
-        placeholder="Adicionar Repositorios"
-        value={newRepo}
-        onChange={handleinputChange}
-        />
-
-        <SubmitButton>
-          <FaPlus color="#FFF" size={14}/>
-        </SubmitButton>
-
-      </Form>
-
-    </Container>
-  )
-}
-=======
-  const handleSubmit = useCallback(
-    (e) => {
       e.preventDefault();
 
       async function submit() {
@@ -89,10 +29,10 @@ export default function Main() {
           setNewRepo("");
         } catch (error) {
 
-            console.log(error);
+          console.log(error);
 
-        }finally {
-            setLoading(false)
+        } finally {
+          setLoading(false)
         }
       }
 
@@ -121,15 +61,27 @@ export default function Main() {
         />
 
         <SubmitButton loading={loading ? 1 : 0}>
-            {loading ? (
-                <FaSpinner color= '#FFF' size={14}/>
-            ) : (
-                <FaPlus color= '#FFF' size={14}/>
-            )}
-        
+          {loading ? (
+            <FaSpinner color='#FFF' size={14} />
+          ) : (
+            <FaPlus color='#FFF' size={14} />
+          )}
+
         </SubmitButton>
       </Form>
+
+      <List>
+            {repositorios.map(repo =>(
+              <li key={repo.name}>
+                <span>{repo.name}</span>
+                <a href="">
+                  <FaBars size={20}/>
+                </a>
+              </li>
+
+            ))}
+      </List>
+
     </Container>
   );
 }
->>>>>>> fd2ba249fb1b71ba03025446de02683836107fec
