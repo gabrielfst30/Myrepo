@@ -6,10 +6,11 @@ import { Container, Form, SubmitButton, List, DeleteButton } from "./styles";
 import api from "../../services/api";
 
 export default function Main() {
-  const [newRepo, setNewRepo] = useState("");
+  const [newRepo, setNewRepo] = useState('');
   const [repositorios, setRepositorios] = useState([]);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [loaded, setLoaded] = useState(false); // Nova variável de estado
 
   //Buscar localStorage
   useEffect(() => {
@@ -20,18 +21,20 @@ export default function Main() {
       //convertendo json e setando repositorio
       setRepositorios(JSON.parse(repoStorage));
     }
+
+    setLoaded(true); // Marcar como carregado
   }, []);
 
-  //Salvar Alterações
+  // Salvar Alterações
   useEffect(() => {
-    //Criando local storage e salvando os repositorios
-    localStorage.setItem('repos', JSON.stringify(repositorios));
-  },[repositorios])
+    if (loaded) {
+      localStorage.setItem('repos', JSON.stringify(repositorios));
+    }
+  }, [repositorios, loaded]);
 
 
 
   const handleSubmit = useCallback((e) => {
-
       e.preventDefault();
 
       async function submit() {
@@ -70,9 +73,7 @@ export default function Main() {
       }
 
       submit();
-    },
-    [newRepo, repositorios]
-  );
+    }, [newRepo, repositorios]);
 
   function handleinputChange(e) {
     setNewRepo(e.target.value);
@@ -83,7 +84,7 @@ export default function Main() {
     //retorna todos repositorios, menos o que foi clicado
     const find = repositorios.filter(r => r.name !== repo);
     setRepositorios(find);
-  }, []);
+  }, [repositorios]);
 
   return (
     <Container>
