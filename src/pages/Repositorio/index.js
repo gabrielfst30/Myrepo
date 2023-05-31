@@ -1,8 +1,12 @@
 import React from 'react';
+import { useParams } from "react-router";
 
 export default function Repositorio(){
 
+    const { id } = useParams()
     return(
-        <h1>Repositorio</h1>
-    )
+        <>
+        <span style={{color:'#fff'}}> {decodeURIComponent(id)}</span>
+        </>
+    );
 }
