@@ -10,7 +10,7 @@ const Rotas = () => {
       <Routes>
         <Rota path="/" element={<Main />} />
         {/* A rota repositorio espera o parametro repositorio */}
-        <Rota path="/repositorio/:id" element={<Repositorio />} />
+        <Rota path="/repositorio/:repoId" element={<Repositorio />} />
       </Routes>
     </BrowserRouter>
   );
